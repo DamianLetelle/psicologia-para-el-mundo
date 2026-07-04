@@ -3,10 +3,11 @@ import { useEffect } from "react";
 import { useAnimate, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
 import { usePageTransition } from "@/components/motion/PageTransitionProvider";
+import { navMode } from "@/lib/navMode";
 import { NAV, EASE } from "@/lib/motion";
 
-// En la primera carga no anima (evita ocultar contenido en SSR). En cada navegación posterior:
-// la página nueva llega desde abajo, lento (también sirve de "aparición lenta" tras el vapor).
+// Primera carga: no anima (no oculta contenido en SSR). Navegación normal: la página nueva llega
+// desde abajo, lento. Navegación por vapor: no hace entrada propia; el vidrio la revela de a poco.
 let firstMount = true;
 
 export default function Template({ children }: { children: ReactNode }) {
@@ -16,7 +17,9 @@ export default function Template({ children }: { children: ReactNode }) {
   useEffect(() => {
     const isFirst = firstMount;
     firstMount = false;
-    if (!reduce && !isFirst && scope.current) {
+    const isVapor = navMode.vapor;
+    navMode.vapor = false;
+    if (!reduce && !isFirst && !isVapor && scope.current) {
       animate(scope.current, { opacity: [0, 1], y: [NAV.dist, 0] }, { duration: NAV.inn, ease: EASE.entrada });
     }
     if (ctx && !reduce) {

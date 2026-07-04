@@ -1,5 +1,8 @@
 // Motor imperativo de vapor + vidrio esmerilado (portado del prototipo oficial).
-// No usa React; manipula capas fijas sobre <body>. Solo corre en el navegador (al hacer clic).
+// La primera página termina totalmente opaca (el contenido desaparece, foco último); ahí ocurre el
+// cambio de página, y la nueva "nace" desde esa opacidad y se revela de a poco (transición sin corte).
+import { navMode } from "@/lib/navMode";
+
 type VaporCfg = { dir: string; dur: number; count: number; alpha: number; size: number; dist: number; color: string };
 type FrostCfg = { blur: number; frost: number; hold: number; total: number };
 
@@ -53,7 +56,8 @@ function emit(cfg: VaporCfg, btn: HTMLElement, layer: HTMLElement): void {
   }
 }
 
-// Reproduce el vapor + el vidrio que cierra sobre el botón; llama onArrive (navegar) al cerrarse.
+const smooth = (x: number) => x * x * (3 - 2 * x);
+
 export function runVaporTransition(btn: HTMLElement, cfg: VaporCfg, frostCfg: FrostCfg, onArrive: () => void): void {
   if (busy) return;
   busy = true;
@@ -67,26 +71,36 @@ export function runVaporTransition(btn: HTMLElement, cfg: VaporCfg, frostCfg: Fr
   frost.style.setProperty("--my", cy + "px");
   const W = window.innerWidth, H = window.innerHeight;
   const maxR = Math.max(Math.hypot(cx, cy), Math.hypot(W - cx, cy), Math.hypot(cx, H - cy), Math.hypot(W - cx, H - cy)) + 120;
-  const blurMax = frostCfg.blur, frostOp = frostCfg.frost / 100, total = frostCfg.total;
-  const closeEnd = Math.min(0.97, Math.max(0.5, (frostCfg.hold || 86) / 100));
+  const blurMax = frostCfg.blur, peak = frostCfg.frost / 100, total = frostCfg.total;
+  const closeEnd = Math.min(0.9, Math.max(0.4, (frostCfg.hold || 67) / 100));
   const maskFor = (r0: number) => "radial-gradient(circle at var(--mx) var(--my), transparent " + r0.toFixed(1) + "px, #000 " + (r0 + 90).toFixed(1) + "px)";
+  const setStyle = (k: string, v: string) => { (frost.style as unknown as Record<string, string>)[k] = v; };
   frost.style.display = "block";
   const start = performance.now();
   let swapped = false;
   function frame(now: number) {
     let t = (now - start) / total; if (t > 1) t = 1;
-    let op: number, blur: number, r0: number;
-    let ramp = Math.min(1, t / 0.3); ramp = 1 - Math.pow(1 - ramp, 2);
-    if (t < closeEnd) { const tc = t / closeEnd; const ec = 1 - Math.pow(1 - tc, 3); r0 = maxR * (1 - ec); op = frostOp * ramp; blur = blurMax * ramp; }
-    else { const tr = (t - closeEnd) / (1 - closeEnd); const er = 1 - Math.pow(1 - tr, 2); r0 = 0; op = frostOp * (1 - er); blur = blurMax * (1 - er); }
+    let op: number, r0: number, masked: boolean;
+    if (t < closeEnd) {
+      const tc = t / closeEnd;
+      r0 = maxR * Math.pow(1 - tc, 3);   // el foco se mantiene y cierra al final
+      op = peak * (tc * tc);             // translúcido y termina TOTALMENTE opaca
+      masked = true;
+    } else {
+      const tr = (t - closeEnd) / (1 - closeEnd);
+      r0 = 0;
+      op = peak * (1 - smooth(tr));       // se disipa de a poco: revela la página nueva
+      masked = false;
+    }
+    const blur = blurMax * Math.min(1, op);
     frost.style.background = "rgba(" + BG + "," + op.toFixed(3) + ")";
     frost.style.backdropFilter = "blur(" + blur.toFixed(2) + "px)";
-    (frost.style as unknown as Record<string, string>).webkitBackdropFilter = "blur(" + blur.toFixed(2) + "px)";
-    frost.style.maskImage = maskFor(r0);
-    (frost.style as unknown as Record<string, string>).webkitMaskImage = maskFor(r0);
-    if (!swapped && t >= closeEnd) { swapped = true; onArrive(); }
+    setStyle("webkitBackdropFilter", "blur(" + blur.toFixed(2) + "px)");
+    frost.style.maskImage = masked ? maskFor(r0) : "none";
+    setStyle("webkitMaskImage", masked ? maskFor(r0) : "none");
+    if (!swapped && t >= closeEnd) { swapped = true; navMode.vapor = true; onArrive(); }
     if (t < 1) requestAnimationFrame(frame);
-    else { frost.style.display = "none"; frost.style.background = "rgba(" + BG + ",0)"; busy = false; }
+    else { frost.style.display = "none"; frost.style.background = "rgba(" + BG + ",0)"; frost.style.maskImage = "none"; setStyle("webkitMaskImage", "none"); busy = false; }
   }
   requestAnimationFrame(frame);
 }
