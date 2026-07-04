@@ -5,8 +5,10 @@ export const EASE = {
   recorrido: [0.65, 0, 0.35, 1] as [number, number, number, number],
   salida: [0.4, 0, 1, 1] as [number, number, number, number],
 };
-// Transición direccional (resto de botones): la pantalla viaja y la nueva reaparece.
-export const NAV = { dir: "arriba" as const, dist: 70, out: 0.7, inn: 0.9 };
+// Transición direccional entre páginas: la que se va sube y se esfuma; la nueva llega desde abajo, lento.
+export const NAV = { dist: 48, out: 0.8, inn: 1.15 };
+// Reveal al hacer scroll: viaje largo y lento; se repite y es bidireccional (baja y sube).
+export const REVEAL = { dist: 56, dur: 1.3 };
 // Vapor + vidrio esmerilado (solo botones especiales). Presets imagen 1 / imagen 2.
 export const VAPOR = {
   lead: { dir: "radial", dur: 2600, count: 20, alpha: 55, size: 34, dist: 110, color: "#C06A4E" },
