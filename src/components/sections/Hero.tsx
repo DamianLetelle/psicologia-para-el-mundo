@@ -1,5 +1,5 @@
-import Button from "@/components/Button";
 import Reveal from "@/components/Reveal";
+import VaporCTA from "@/components/VaporCTA";
 
 const content = {
   eyebrow: "Psicología cálida, a tu ritmo",
@@ -18,7 +18,7 @@ export default function Hero() {
         <h1 className="text-4xl leading-[1.12] tracking-tight md:text-6xl">{content.titulo}</h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-tinta-suave md:text-xl">{content.subtitulo}</p>
         <div className="mt-9 flex flex-wrap items-center gap-4">
-          <Button href="/agendar">{content.cta}</Button>
+          <VaporCTA href="/agendar">{content.cta}</VaporCTA>
           <a href="#como-trabajo" className="text-sm font-semibold text-tinta-suave underline-offset-4 hover:text-tinta hover:underline">{content.secundario}</a>
         </div>
         <p className="mt-4 text-sm text-tinta-suave">{content.nota}</p>

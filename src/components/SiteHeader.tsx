@@ -1,4 +1,4 @@
-import Button from "@/components/Button";
+import VaporCTA from "@/components/VaporCTA";
 
 const brand = "Psicología para el mundo";
 const links = [
@@ -19,7 +19,7 @@ export default function SiteHeader() {
             <a key={l.href} href={l.href} className="text-sm text-tinta-suave transition-colors hover:text-tinta">{l.label}</a>
           ))}
         </div>
-        <Button href="/agendar" className="px-5 py-2.5 text-sm">Agendar</Button>
+        <VaporCTA href="/agendar" className="px-5 py-2.5 text-sm">Agendar</VaporCTA>
       </nav>
     </header>
   );
