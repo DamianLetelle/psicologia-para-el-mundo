@@ -1,0 +1,8 @@
+/* Paletas — datos del sistema de temas (Principios 4/15). Un tema por bloque; mismos roles. */
+:root,
+[data-theme="terracota"]{ --fondo:#FAF6F0; --superficie:#FFFDFB; --tinta:#3B352F; --tinta-suave:#6E655C; --accion:#AB5A3A; --accion-texto:#FFFFFF; --acento:#7F9070; --acento-fondo:#E7ECE0; --acento-texto:#4B5A40; --borde:#E7DED3; }
+[data-theme="bruma"]{ --fondo:#F3F5F7; --superficie:#FFFFFF; --tinta:#2E3A44; --tinta-suave:#61707B; --accion:#4F7488; --accion-texto:#FFFFFF; --acento:#7E97A1; --acento-fondo:#E4EBEE; --acento-texto:#33505C; --borde:#E1E7EB; }
+[data-theme="lavanda"]{ --fondo:#F6F4FA; --superficie:#FFFFFF; --tinta:#37323F; --tinta-suave:#6B6478; --accion:#7766A3; --accion-texto:#FFFFFF; --acento:#A99AC9; --acento-fondo:#ECE7F5; --acento-texto:#4E4368; --borde:#E7E2F0; }
+[data-theme="bosque"]{ --fondo:#F2F5EF; --superficie:#FFFFFF; --tinta:#2C352A; --tinta-suave:#5E6A58; --accion:#547844; --accion-texto:#FFFFFF; --acento:#86A06F; --acento-fondo:#E5EEDD; --acento-texto:#3C4E2E; --borde:#E0E7D8; }
+[data-theme="arena"]{ --fondo:#F7F3EC; --superficie:#FFFFFF; --tinta:#3A352C; --tinta-suave:#6E665A; --accion:#8A6938; --accion-texto:#FFFFFF; --acento:#B49A72; --acento-fondo:#EFE7D8; --acento-texto:#5C4A2E; --borde:#E8E0D2; }
+[data-theme="noche"]{ --fondo:#1E1B18; --superficie:#2A2622; --tinta:#F1EBE3; --tinta-suave:#B7ADA1; --accion:#D6836A; --accion-texto:#221E1A; --acento:#9DB08C; --acento-fondo:#33302A; --acento-texto:#C9D6BC; --borde:#3A352F; }
