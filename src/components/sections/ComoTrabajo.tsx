@@ -1,4 +1,5 @@
 import Reveal from "@/components/Reveal";
+import TransitionLink from "@/components/motion/TransitionLink";
 
 const content = {
   titulo: "Cómo trabajo",
@@ -7,12 +8,12 @@ const content = {
     { titulo: "A tu ritmo", texto: "Vamos paso a paso; no hay una forma “correcta” de sentirse." },
     { titulo: "Con herramientas", texto: "Te llevás recursos para tus días, no solo la hora de sesión." },
   ],
-  link: { href: "/agendar", label: "Cómo trabajo →" },
+  link: { href: "/como-trabajo", label: "Cómo trabajo →" },
 };
 
 export default function ComoTrabajo() {
   return (
-    <section id="como-trabajo" className="border-t border-borde/60 bg-superficie/40 py-20">
+    <section className="border-t border-borde/60 bg-superficie/40 py-20">
       <div className="mx-auto max-w-5xl px-5">
         <Reveal><h2 className="text-3xl md:text-4xl">{content.titulo}</h2></Reveal>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
@@ -26,7 +27,7 @@ export default function ComoTrabajo() {
           ))}
         </div>
         <Reveal delay={0.1}>
-          <a href={content.link.href} className="mt-8 inline-block font-semibold text-accion hover:underline underline-offset-4">{content.link.label}</a>
+          <TransitionLink href={content.link.href} className="mt-8 inline-block font-semibold text-accion hover:underline underline-offset-4">{content.link.label}</TransitionLink>
         </Reveal>
       </div>
     </section>

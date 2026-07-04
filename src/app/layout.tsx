@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Fraunces, Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import PageTransitionProvider from "@/components/motion/PageTransitionProvider";
+import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
 
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces", display: "swap" });
 const nunito = Nunito_Sans({ subsets: ["latin"], variable: "--font-nunito", display: "swap" });
@@ -16,7 +18,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" data-theme="terracota" className={`${fraunces.variable} ${nunito.variable}`}>
       <body className="min-h-screen bg-fondo text-tinta antialiased">
-        <PageTransitionProvider>{children}</PageTransitionProvider>
+        <PageTransitionProvider>
+          <SiteHeader />
+          {children}
+          <SiteFooter />
+        </PageTransitionProvider>
       </body>
     </html>
   );

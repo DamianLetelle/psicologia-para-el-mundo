@@ -1,5 +1,6 @@
 import Reveal from "@/components/Reveal";
 import VaporCTA from "@/components/VaporCTA";
+import TransitionLink from "@/components/motion/TransitionLink";
 
 const content = {
   eyebrow: "Psicología cálida, a tu ritmo",
@@ -19,7 +20,7 @@ export default function Hero() {
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-tinta-suave md:text-xl">{content.subtitulo}</p>
         <div className="mt-9 flex flex-wrap items-center gap-4">
           <VaporCTA href="/agendar">{content.cta}</VaporCTA>
-          <a href="#como-trabajo" className="text-sm font-semibold text-tinta-suave underline-offset-4 hover:text-tinta hover:underline">{content.secundario}</a>
+          <TransitionLink href="/como-trabajo" className="text-sm font-semibold text-tinta-suave underline-offset-4 hover:text-tinta hover:underline">{content.secundario}</TransitionLink>
         </div>
         <p className="mt-4 text-sm text-tinta-suave">{content.nota}</p>
       </Reveal>
