@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Psicología para el mundo — sitio web
 
-## Getting Started
+Sitio de Cecilia Torres. **Fase 4 (MVP público).** Stack: Next.js 16 + React 19 + Tailwind v4 +
+framer-motion, exportado como sitio **estático** (`output: export`).
 
-First, run the development server:
+## Estructura (una responsabilidad por archivo)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- `src/app/` — páginas (una por ruta), `layout.tsx` (marca + menú + pie globales) y `template.tsx`
+  (transición de entrada entre páginas).
+- `src/components/` — piezas de UI: secciones de la home, header/footer, menú móvil, botones, y el
+  movimiento (`Reveal`, `VaporCTA`, `motion/TransitionLink`).
+- `src/lib/` — motor de vapor, tokens de movimiento, y la **capa de servicios (sin ataduras)**:
+  - `config.ts` — validación de variables de entorno con zod (falla temprano si falta algo).
+  - `ports/` — contratos de lo externo: `auth`, `database`, `payments`, `mailer`, `storage`.
+  - `adapters/` — implementaciones por proveedor (hoy *stubs*; se conectan en la Fase 5).
+  - `services.ts` — registro: valida la config y elige el adapter activo. La app usa los **puertos**,
+    nunca el SDK del proveedor → cambiar de proveedor es cambiar un adapter.
+- `src/content/` — contenido como dato (biblioteca). `src/styles/theme.css` — las 6 paletas como dato.
+- `scripts/check-contrast.mjs` — control automático de contraste (WCAG AA).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Desarrollo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `npm install` y `npm run dev`.
+- `npm run build` genera el sitio estático en `out/`.
+- `npm run check:contrast` valida el contraste de todas las paletas.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Publicar
 
-## Learn More
+Cloudflare Pages: deploy de `out/` (o auto-deploy conectando este repositorio).
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Lo externo (Supabase, Mercado Pago, Resend) entra en la **Fase 5** detrás de `src/lib/ports`.
