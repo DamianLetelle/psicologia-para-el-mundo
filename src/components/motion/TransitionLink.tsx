@@ -1,19 +1,21 @@
 "use client";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import type { ReactNode, MouseEvent } from "react";
-import { usePageTransition } from "@/components/motion/PageTransitionProvider";
 import { whenFontsReady } from "@/lib/ready";
 
-// Enlace interno con la transición direccional (la página se va y la nueva llega).
+// Enlace interno: precarga el destino, respeta modificadores (nueva pestaña) y no rompe al tocar la
+// misma página. Navega directo (la página nueva hace su entrada al montarse).
 export default function TransitionLink({ href, className = "", children }: { href: string; className?: string; children: ReactNode }) {
-  const ctx = usePageTransition();
   const router = useRouter();
-  useEffect(() => { router.prefetch(href); }, [href, router]); // precarga la página destino
+  const pathname = usePathname();
+  useEffect(() => { router.prefetch(href); }, [href, router]);
+  const norm = (p: string) => (p.length > 1 ? p.replace(/\/$/, "") : p);
   const onClick = (e: MouseEvent<HTMLAnchorElement>) => {
-    if (!ctx) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
     e.preventDefault();
-    whenFontsReady(() => ctx.navigate(href));
+    if (norm(href) === norm(pathname || "")) { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+    whenFontsReady(() => router.push(href));
   };
   return (
     <a href={href} onClick={onClick} className={className}>

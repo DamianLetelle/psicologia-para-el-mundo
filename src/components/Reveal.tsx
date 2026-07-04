@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { REVEAL, EASE } from "@/lib/motion";
 
-// Descubre el contenido al entrar en pantalla. Se repite cada vez (no una sola vez) y es
-// bidireccional: al bajar llega desde abajo; al subir, desde arriba.
+// Descubre el contenido al entrar en pantalla. Evalúa de inmediato tras el layout (así el contenido
+// visible al cargar se muestra sí o sí), y se repite: al bajar llega desde abajo; al subir, desde arriba.
 export default function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
@@ -14,16 +14,16 @@ export default function Reveal({ children, delay = 0, className = "" }: { childr
     if (reduce) return;
     const el = ref.current;
     if (!el) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        const e = entries[0];
-        if (e.isIntersecting) setPhase("in");
-        else setPhase(e.boundingClientRect.top > 0 ? "below" : "above");
-      },
-      { threshold: 0.15, rootMargin: "-6% 0px -6% 0px" }
-    );
+    const evaluate = () => {
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight || 800;
+      const inView = r.top < vh * 0.9 && r.bottom > vh * 0.1;
+      setPhase(inView ? "in" : r.top >= vh * 0.5 ? "below" : "above");
+    };
+    const raf = requestAnimationFrame(evaluate); // evaluación inmediata tras el layout
+    const io = new IntersectionObserver(evaluate, { threshold: [0, 0.15, 0.5, 1] }); // cambios al scrollear
     io.observe(el);
-    return () => io.disconnect();
+    return () => { cancelAnimationFrame(raf); io.disconnect(); };
   }, [reduce]);
   if (reduce) return <div className={className}>{children}</div>;
   const variants = {

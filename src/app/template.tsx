@@ -2,18 +2,16 @@
 import { useEffect } from "react";
 import { useAnimate, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
-import { usePageTransition } from "@/components/motion/PageTransitionProvider";
 import { navMode } from "@/lib/navMode";
 import { NAV, EASE } from "@/lib/motion";
 
 // Primera carga: no anima (no oculta contenido en SSR). Navegación normal: la página nueva llega
-// desde abajo, lento. Navegación por vapor: no hace entrada propia; el vidrio la revela de a poco.
+// desde abajo, lento. Navegación por vapor: no hace entrada propia (el vidrio la revela de a poco).
 let firstMount = true;
 
 export default function Template({ children }: { children: ReactNode }) {
   const [scope, animate] = useAnimate();
   const reduce = useReducedMotion();
-  const ctx = usePageTransition();
   useEffect(() => {
     const isFirst = firstMount;
     firstMount = false;
@@ -21,12 +19,6 @@ export default function Template({ children }: { children: ReactNode }) {
     navMode.vapor = false;
     if (!reduce && !isFirst && !isVapor && scope.current) {
       animate(scope.current, { opacity: [0, 1], y: [NAV.dist, 0] }, { duration: NAV.inn, ease: EASE.entrada });
-    }
-    if (ctx && !reduce) {
-      const exit: () => Promise<unknown> = () =>
-        animate(scope.current, { opacity: 0, y: -NAV.dist }, { duration: NAV.out, ease: EASE.salida }).finished;
-      ctx.registerExit(exit);
-      return () => ctx.registerExit(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
