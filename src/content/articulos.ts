@@ -1,14 +1,7 @@
-// Piezas semilla de la biblioteca, como dato (una sola fuente: la usan el listado y cada artículo).
-export type Articulo = {
-  slug: string;
-  tema: string;
-  titulo: string;
-  resumen: string;
-  entrada: string;
-  contenido: string[];
-  herramienta: { nombre: string; texto: string };
-  aviso?: string;
-};
+// Piezas semilla de la biblioteca: dato inicial y red de seguridad si la base no responde.
+// El tipo vive una sola vez en el puerto (P6): la semilla y la base comparten la misma forma.
+import type { ArticuloContenido } from "@/lib/ports/database";
+export type Articulo = ArticuloContenido;
 
 export const articulos: Articulo[] = [
   {

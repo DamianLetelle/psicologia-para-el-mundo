@@ -1,6 +1,7 @@
 import VaporCTA from "@/components/VaporCTA";
 import TransitionLink from "@/components/motion/TransitionLink";
 import MobileMenu from "@/components/MobileMenu";
+import SelectorPais from "@/components/pais/SelectorPais";
 
 const brand = "Psicología para el mundo";
 const links = [
@@ -21,7 +22,8 @@ export default function SiteHeader() {
             <TransitionLink key={l.href} href={l.href} className="text-sm text-tinta-suave transition-colors hover:text-tinta">{l.label}</TransitionLink>
           ))}
         </div>
-        <div className="hidden md:block">
+        <div className="hidden items-center gap-3 md:flex">
+          <SelectorPais />
           <VaporCTA href="/agendar" className="px-5 py-2.5 text-sm">Agendar</VaporCTA>
         </div>
         <MobileMenu links={links} />

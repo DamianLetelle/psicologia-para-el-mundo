@@ -1,13 +1,16 @@
 import { z } from "zod";
 
 // Validación de configuración (Regla: config validada al arrancar; si falta algo, falla temprano con
-// un mensaje claro). Hoy el sitio es estático y no usa ninguna: todo es opcional. En la Fase 5, cuando
-// entren los servicios, se marcan como requeridas y cada adapter exige lo suyo con requireEnv().
+// un mensaje claro). El sitio público es estático; el área privada usa las NEXT_PUBLIC_* en el
+// navegador. La anon key es pública (RLS es la frontera real); la service_role NUNCA va al cliente.
 const schema = z.object({
-  // Supabase (base de datos, login, storage de archivos/audios)
+  // Supabase — build-time (lectura de contenido) y servidor
   SUPABASE_URL: z.string().url().optional(),
   SUPABASE_ANON_KEY: z.string().optional(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(), // solo servidor — nunca al cliente
+  // Supabase — cliente (área privada: login + lectura con RLS). Expuestas al navegador.
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
   // Mercado Pago (pagos)
   MERCADOPAGO_ACCESS_TOKEN: z.string().optional(),
   // Resend (mail)

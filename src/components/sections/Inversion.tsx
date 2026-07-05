@@ -1,20 +1,16 @@
 import Reveal from "@/components/Reveal";
 import TransitionLink from "@/components/motion/TransitionLink";
+import { getTextos } from "@/lib/contenido";
 
-const content = {
-  titulo: "Tu inversión en bienestar.",
-  texto: "Cuidarte no es un gasto. Mirá con claridad qué incluye cada encuentro, sin sorpresas y a tu medida.",
-  link: { href: "/honorarios", label: "Ver honorarios →" },
-};
-
-export default function Inversion() {
+export default async function Inversion() {
+  const textos = await getTextos();
   return (
     <section className="py-20">
       <div className="mx-auto max-w-5xl px-5">
         <Reveal className="max-w-2xl">
-          <h2 className="text-3xl md:text-4xl">{content.titulo}</h2>
-          <p className="mt-4 text-lg leading-relaxed text-tinta-suave">{content.texto}</p>
-          <TransitionLink href={content.link.href} className="mt-6 inline-block font-semibold text-accion hover:underline underline-offset-4">{content.link.label}</TransitionLink>
+          <h2 className="text-3xl md:text-4xl">{textos["home.inversion.titulo"]}</h2>
+          <p className="mt-4 text-lg leading-relaxed text-tinta-suave">{textos["home.inversion.texto"]}</p>
+          <TransitionLink href="/honorarios" className="mt-6 inline-block font-semibold text-accion hover:underline underline-offset-4">{textos["home.inversion.cta"]}</TransitionLink>
         </Reveal>
       </div>
     </section>

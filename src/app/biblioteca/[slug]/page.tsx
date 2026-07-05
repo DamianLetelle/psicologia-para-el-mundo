@@ -2,21 +2,21 @@ import { notFound } from "next/navigation";
 import Reveal from "@/components/Reveal";
 import VaporCTA from "@/components/VaporCTA";
 import TransitionLink from "@/components/motion/TransitionLink";
-import { articulos } from "@/content/articulos";
+import { getArticulos, getArticulo } from "@/lib/contenido";
 
-export function generateStaticParams() {
-  return articulos.map((a) => ({ slug: a.slug }));
+export async function generateStaticParams() {
+  return (await getArticulos()).map((a) => ({ slug: a.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const a = articulos.find((x) => x.slug === slug);
+  const a = await getArticulo(slug);
   return { title: (a ? a.titulo : "Artículo") + " — Psicología para el mundo" };
 }
 
 export default async function ArticuloPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const a = articulos.find((x) => x.slug === slug);
+  const a = await getArticulo(slug);
   if (!a) notFound();
   return (
     <main className="mx-auto max-w-2xl px-5 pt-16 pb-24 md:pt-20">

@@ -1,11 +1,12 @@
 import PageHero from "@/components/PageHero";
 import Reveal from "@/components/Reveal";
 import TransitionLink from "@/components/motion/TransitionLink";
-import { articulos } from "@/content/articulos";
+import { getArticulos } from "@/lib/contenido";
 
 export const metadata = { title: "Biblioteca — Psicología para el mundo" };
 
-export default function BibliotecaPage() {
+export default async function BibliotecaPage() {
+  const articulos = await getArticulos();
   return (
     <main>
       <PageHero eyebrow="Biblioteca" titulo="Entender lo que te pasa ya es parte del cambio." intro="Historias y guías para poner en palabras eso que a veces cuesta nombrar. Cada una viene con una herramienta para llevar." />

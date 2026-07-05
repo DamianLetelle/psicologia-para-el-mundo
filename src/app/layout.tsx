@@ -3,6 +3,8 @@ import { Fraunces, Nunito_Sans } from "next/font/google";
 import "./globals.css";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import PaisProvider from "@/components/pais/PaisProvider";
+import { getRecursosCrisis } from "@/lib/contenido";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
 
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces", display: "swap" });
@@ -37,13 +39,16 @@ const jsonLd = {
   provider: { "@type": "Person", name: "Cecilia Torres", jobTitle: "Psicóloga" },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const recursos = await getRecursosCrisis();
   return (
     <html lang="es" data-theme="terracota" className={`${fraunces.variable} ${nunito.variable}`}>
       <body className="min-h-screen bg-fondo text-tinta antialiased">
-        <SiteHeader />
-        {children}
-        <SiteFooter />
+        <PaisProvider recursos={recursos}>
+          <SiteHeader />
+          {children}
+          <SiteFooter />
+        </PaisProvider>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </body>
     </html>
